@@ -7,21 +7,31 @@ class TagsController < ApplicationController
 
   def index
     authorize Tag
-    @tags = policy_scope(Tag.all)
+    tags = policy_scope(Tag.all)
+    @tags = TagPolicy.merge(tags)
   end
 
   def show
     authorize @tag
+    tags = TagPolicy::Scope.new(current_user,
+                                    Tag.where(:id=>@tag.id))
+                                    .user_roles(false)
+    @tag = TagPolicy.merge(tags).first
   end
 
   def create
     authorize Tag
     @tag = Tag.new(tag_params)
 
-    if @tag.save
-      render :show, status: :created, location: @tag
-    else
-      render json: { errors: @tag.errors.messages }, status: :unprocessable_entity
+    User.transaction do
+      if @tag.save
+        role=current_user.add_role(Role::ORGANIZER,@tag)
+        @tag.user_roles << role.role_name
+        role.save!
+        render :show, status: :created, location: @tag
+      else
+        render json: {errors:@tag.errors.messages}, status: :unprocessable_entity
+      end
     end
   end
 

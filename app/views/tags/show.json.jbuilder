@@ -1,2 +1,2 @@
-json.extract! @tag, :id, :name, :things, :created_at, :updated_at
-json.url tag_url(@tag, format: :json)
+json.partial! "tags/tag", tag: @tag
+json.things @tag.things

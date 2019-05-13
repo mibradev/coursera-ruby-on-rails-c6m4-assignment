@@ -45,3 +45,7 @@
 //= require spa-demo/subjects/things/things_authz.service
 //= require spa-demo/subjects/things/things_authz.directive
 //= require spa-demo/subjects/things/things.component
+//= require spa-demo/subjects/tags/tags.service
+//= require spa-demo/subjects/tags/tags_authz.service
+//= require spa-demo/subjects/tags/tags_authz.directive
+//= require spa-demo/subjects/tags/tags.component
